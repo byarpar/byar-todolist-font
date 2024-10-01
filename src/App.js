@@ -3,136 +3,141 @@ import axios from 'axios';
 import './App.css';
 
 const App = () => {
-    const [contacts, setContacts] = useState([]);
-    const [formData, setFormData] = useState({
+  const [contacts, setContacts] = useState([]);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    company: '',
+    phone: '',
+  });
+  const [editId, setEditId] = useState(null);
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
+
+  const fetchContacts = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/contact');
+      setContacts(response.data);
+    } catch (error) {
+      console.error('Error fetching contacts:', error);
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editId) {
+        await axios.put(`http://localhost:3000/contact/${editId}`, formData);
+        setEditId(null);
+      } else {
+        await axios.post('http://localhost:3000/contact', formData);
+      }
+      setFormData({
         firstName: '',
         lastName: '',
         email: '',
         company: '',
         phone: '',
+      });
+      fetchContacts();
+    } catch (error) {
+      console.error('Error adding/updating contact:', error);
+    }
+  };
+
+  const handleEdit = (contact) => {
+    setFormData({
+      firstName: contact.firstName,
+      lastName: contact.lastName,
+      email: contact.email,
+      company: contact.company,
+      phone: contact.phone,
     });
-    const [editingContactId, setEditingContactId] = useState(null);
+    setEditId(contact._id);
+  };
 
-    const API_URL = 'https://depbackend-production-c4f0.up.railway.app/contact'; // Your Railway backend URL
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/contact/${id}`);
+      fetchContacts();
+    } catch (error) {
+      console.error('Error deleting contact:', error);
+    }
+  };
+  
 
-    useEffect(() => {
-        fetchContacts();
-    }, []);
+  return (
+    <div className="container">
+      <h1> "To-Do List" application</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="firstName"
+          placeholder="First Name"
+          value={formData.firstName}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="lastName"
+          placeholder="Last Name"
+          value={formData.lastName}
+          onChange={handleChange}
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="company"
+          placeholder="Company"
+          value={formData.company}
+          onChange={handleChange}
+        />
+        <input
+          type="number"
+          name="phone"
+          placeholder="Phone"
+          value={formData.phone}
+          onChange={handleChange}
+        />
+        <button type="submit">{editId ? 'Update Contact' : 'Add Contact'}</button>
+      </form>
 
-    const fetchContacts = async () => {
-        try {
-            const response = await axios.get(API_URL);
-            setContacts(response.data);
-        } catch (error) {
-            console.error('Error fetching contacts:', error);
-        }
-    };
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({ ...prevData, [name]: value }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            if (editingContactId) {
-                // Update contact
-                await axios.put(`${API_URL}/${editingContactId}`, formData);
-            } else {
-                // Create new contact
-                await axios.post(API_URL, formData);
-            }
-            resetForm();
-            fetchContacts();
-        } catch (error) {
-            console.error('Error saving contact:', error);
-        }
-    };
-
-    const handleEdit = (contact) => {
-        setFormData(contact);
-        setEditingContactId(contact.id);
-    };
-
-    const handleDelete = async (contactId) => {
-        try {
-            await axios.delete(`${API_URL}/${contactId}`);
-            fetchContacts();
-        } catch (error) {
-            console.error('Error deleting contact:', error);
-        }
-    };
-
-    const resetForm = () => {
-        setFormData({ firstName: '', lastName: '', email: '', company: '', phone: '' });
-        setEditingContactId(null);
-    };
-
-    return (
-        <div className="container">
-            <h1>Contact Management</h1>
-            <form className="contact-form" onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    required
-                />
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                />
-                <input
-                    type="text"
-                    name="company"
-                    placeholder="Company"
-                    value={formData.company}
-                    onChange={handleInputChange}
-                />
-                <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                />
-                <button type="submit">{editingContactId ? 'Update Contact' : 'Add Contact'}</button>
-                <button type="button" onClick={resetForm}>Cancel</button>
-            </form>
-
-            <h2>Contacts List</h2>
-            <ul className="contact-list">
-                {contacts.map((contact) => (
-                    <li key={contact.id} className="contact-item">
-                        <div className="contact-details">
-                            <span className="contact-name">{contact.firstName} {contact.lastName}</span>
-                            <span className="contact-email">{contact.email}</span>
-                            <span className="contact-company">{contact.company}</span>
-                            <span className="contact-phone">{contact.phone}</span>
-                        </div>
-                        <div className="contact-actions">
-                            <button className="edit-button" onClick={() => handleEdit(contact)}>Edit</button>
-                            <button className="delete-button" onClick={() => handleDelete(contact.id)}>Delete</button>
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+      
+      <ul>
+        {contacts.map(contact => (
+          <li key={contact._id}>
+            <div className="contact-info">
+              <span>{contact.firstName} {contact.lastName}</span>
+              <span>{contact.email}</span>
+              <span>{contact.phone}</span>
+              <span>{contact.company}</span>
+            </div>
+            <div className="buttons-container">
+              <button className="edit-button" onClick={() => handleEdit(contact)}>Edit</button>
+              <button onClick={() => handleDelete(contact._id)}>Delete</button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default App;
+ 
