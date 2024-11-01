@@ -1,119 +1,125 @@
-/* Container for the whole app */
-.container {
-  width: 80%;
-  margin: 0 auto;
+/* App.css */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  margin: 0;
   padding: 20px;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  text-align: center;
-  background-color: #f7f9fc;
 }
 
-/* Form styling */
+h2 {
+  color: #4a90e2;
+}
+
 form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-  background: #ffffff;
+  background-color: #fff;
   padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  max-width: 600px; /* Limit form width */
+  margin-left: auto; /* Center form */
+  margin-right: auto; /* Center form */
 }
 
-input[type="text"], input[type="email"], input[type="number"] {
-  width: 300px;
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+  width: calc(100% - 20px);
   padding: 10px;
   margin: 10px 0;
-  border: 2px solid #e1bee7;
-  border-radius: 10px;
-  font-size: 16px;
-  transition: border-color 0.3s ease;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
-input[type="text"]:focus, input[type="email"]:focus, input[type="number"]:focus {
-  border-color: #d81b60;
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus {
+  border-color: #4a90e2;
   outline: none;
 }
 
 button {
-  padding: 10px 20px;
-  background-color: #f48fb1;
+  background-color: #4a90e2;
   color: white;
   border: none;
-  border-radius: 10px;
-  font-size: 16px;
+  padding: 10px 15px;
+  margin-right: 10px;
+  border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #ec407a;
+  background-color: #357ab8;
 }
 
 ul {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
+  max-width: 600px; /* Limit list width */
+  margin-left: auto; /* Center list */
+  margin-right: auto; /* Center list */
 }
 
-/* Contact list item */
 li {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr auto;
-  gap: 10px;
-  align-items: center;
-  background-color: #ffffff;
-  padding: 15px;
+  background-color: #fff;
+  padding: 10px;
   margin: 10px 0;
-  border: 1px solid #ddd;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Contact details layout */
-.contact-info {
-  display: contents; /* Ensures the items align in grid columns */
-}
-
-.contact-info span {
-  display: block;
-  text-align: center;
-  padding: 5px;
-}
-
-/* Buttons container */
-.buttons-container {
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Buttons styles */
 li button {
-  background-color: #ff6f61;
-  border-radius: 10px;
+  background-color: #e94e77;
 }
 
 li button:hover {
-  background-color: #e64a19;
+  background-color: #c03950;
 }
 
-.edit-button {
-  background-color: #ffeb3b;
-  color: #000;
+/* Media Queries */
+@media (max-width: 768px) {
+  form {
+      padding: 15px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"] {
+      padding: 8px;
+      font-size: 14px;
+  }
+
+  button {
+      padding: 8px 12px;
+      font-size: 14px;
+  }
+
+  li {
+      flex-direction: column; /* Stack elements vertically */
+      align-items: flex-start; /* Align items to the start */
+  }
+
+  li button {
+      width: 100%; /* Make buttons full width on smaller screens */
+      margin-top: 5px; /* Space between buttons */
+  }
 }
 
-.edit-button:hover {
-  background-color: #fdd835;
-  color: #000;
-}
+@media (max-width: 480px) {
+  body {
+      padding: 10px; /* Reduce padding for smaller screens */
+  }
 
-/* Ensure buttons are stacked vertically */
-.buttons-container button {
-  margin-bottom: 10px;
-}
-
-/* Remove bottom margin from last button in the container */
-.buttons-container button:last-child {
-  margin-bottom: 0;
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  button {
+      font-size: 12px; /* Smaller font size */
+  }
 }
